@@ -327,6 +327,31 @@
     },
   };
 
+  function mountSiteControls() {
+    const stage = document.getElementById('stage-upload');
+    if (!stage || document.getElementById('site-runtime-settings-btn')) return;
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap';
+    const btn = document.createElement('button');
+    btn.id = 'site-runtime-settings-btn';
+    btn.type = 'button';
+    btn.className = 'secondary-btn';
+    btn.textContent = 'Gemini / Site 設定';
+    btn.addEventListener('click', () => chrome.tabs.create({
+      url: runtime.getURL('translate-doc/settings.html'),
+    }));
+    const note = document.createElement('span');
+    note.style.cssText = 'font-size:12px;opacity:.72';
+    note.textContent = 'EPUB 上限 500 MB；超大型檔案的實際可用性仍受裝置記憶體限制';
+    wrap.append(btn, note);
+    stage.appendChild(wrap);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', mountSiteControls, { once: true });
+  } else {
+    mountSiteControls();
+  }
+
   globalThis.chrome = chrome;
   globalThis.browser = chrome;
   globalThis.__SHINKANSEN_SITE_RUNTIME__ = { rootUrl: ROOT_URL.href, version: 'site-500mb' };
