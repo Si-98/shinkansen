@@ -250,7 +250,7 @@
   async function handleExtractGlossary(payload = {}) {
     const { storageMod, gemini, pricingMod, billing } = await loadCore();
     const s = await storageMod.getSettingsCached();
-    if (!s.apiKey) return { glossary: [], usage: {}, _diag: 'Gemini API key missing' };
+    if (!s.apiKey) return { ok: false, glossary: [], usage: {}, error: 'Gemini API key missing', errorCode: 'apiKeyMissing', _diag: 'Gemini API key missing' };
     const model = payload.modelOverride || s.glossary?.model || s.geminiConfig?.model;
     const suffix = typeof payload.promptSuffix === 'string' ? payload.promptSuffix.trim() : '';
     const settings = {
@@ -269,7 +269,7 @@
   async function handleScanRenderings(payload = {}) {
     const { storageMod, gemini, pricingMod, billing } = await loadCore();
     const s = await storageMod.getSettingsCached();
-    if (!s.apiKey) return { renderings: [], usage: {}, _diag: 'Gemini API key missing' };
+    if (!s.apiKey) return { ok: false, renderings: [], usage: {}, error: 'Gemini API key missing', errorCode: 'apiKeyMissing', _diag: 'Gemini API key missing' };
     const model = s.glossary?.model || s.geminiConfig?.model;
     const out = await gemini.extractTermRenderings(Array.isArray(payload.items) ? payload.items : [], s);
     const billed = await billUsage(s, model, out.usage, pricingMod, billing);
