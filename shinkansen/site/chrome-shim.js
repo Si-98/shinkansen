@@ -168,6 +168,7 @@
   function siteError(err, fallbackCode = 'siteRuntime') {
     console.error('[Shinkansen Site]', err);
     return {
+      ok: false,
       error: err?.message || String(err),
       errorCode: err?.skCode || fallbackCode,
       errorParams: err?.skParams || null,
@@ -262,7 +263,7 @@
     };
     const out = await gemini.extractGlossary(String(payload.compressedText || ''), settings);
     const billed = await billUsage(settings, model, out.usage, pricingMod, billing);
-    return { ...out, usage: { ...billed, cacheHits: 0 }, fromCache: false };
+    return { ok: true, ...out, usage: { ...billed, cacheHits: 0 }, fromCache: false };
   }
 
   async function handleScanRenderings(payload = {}) {
@@ -272,7 +273,7 @@
     const model = s.glossary?.model || s.geminiConfig?.model;
     const out = await gemini.extractTermRenderings(Array.isArray(payload.items) ? payload.items : [], s);
     const billed = await billUsage(s, model, out.usage, pricingMod, billing);
-    return { ...out, usage: { ...billed, cacheHits: 0 }, billedCostUSD: billed.billedCostUSD };
+    return { ok: true, ...out, usage: { ...billed, cacheHits: 0 }, billedCostUSD: billed.billedCostUSD };
   }
 
   async function handleMessage(message) {
@@ -282,7 +283,7 @@
       switch (type) {
         case 'TRANSLATE_DOC_BATCH': return await handleTranslateDoc(payload);
         case 'TRANSLATE_DOC_BATCH_CUSTOM':
-          return { error: 'Site 版目前先支援 Gemini；請將翻譯 preset 改成 Gemini。', errorCode: 'siteCustomProviderUnsupported' };
+          return { ok: false, error: 'Site 版目前先支援 Gemini；請將翻譯 preset 改成 Gemini。', errorCode: 'siteCustomProviderUnsupported' };
         case 'EXTRACT_GLOSSARY': return await handleExtractGlossary(payload);
         case 'SCAN_TERM_RENDERINGS': return await handleScanRenderings(payload);
         case 'LOG_USAGE': {
