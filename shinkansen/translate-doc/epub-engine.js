@@ -34,7 +34,7 @@ export const HAS_LETTER_RE = /\p{L}/u;
 // 硬上限走檔案 bytes（EPUB 大多是圖片撐大，跟翻譯成本無關，設寬鬆防呆值）；
 // 軟警告走「可翻譯字元數」（成本相關維度），超過時 UI 要使用者確認。
 export const EPUB_LIMITS = {
-  hardMaxBytes: 100 * 1024 * 1024,   // 100 MB
+  hardMaxBytes: 500 * 1024 * 1024,   // 500 MB
   softWarnChars: 500_000,            // 50 萬可翻譯字元（動工時實測校準的暫定量級）
 };
 
