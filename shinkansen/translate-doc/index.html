@@ -460,6 +460,7 @@
        content-ns.js 會重建 window.__SK，必須排在 lib/i18n.js 之前（i18n attach 到同一 namespace）。
        此頁的 __SK 與網頁 content script instance 互不相干；EPUB 專屬序列化政策
        override 見 epub-engine.js applyEpubSerializerPolicy -->
+  <script src="../site/chrome-shim.js"></script>
   <script src="../lib/vendor/fflate/fflate.umd.js"></script>
   <script src="../content-ns.js"></script>
   <script src="../content-serialize.js"></script>
